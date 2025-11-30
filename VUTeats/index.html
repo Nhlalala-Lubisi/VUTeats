@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VUTeats - Food Ordering</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <div class="logo" onclick="showView('home')">
+                <div class="logo-icon">
+                    <img src="images/vut-logo.jpg" alt="VUTeats Logo" class="logo-img">
+                </div>
+                <div class="logo-text">
+                    <span class="vut">VUT</span><span class="eats">eats</span>
+                </div>
+            </div>
+
+            <nav class="desktop-nav">
+                <button class="nav-btn" data-view="home" onclick="showView('home')">Home</button>
+                <button class="nav-btn" data-view="about" onclick="showView('about')">About</button>
+                <button class="nav-btn" data-view="contact" onclick="showView('contact')">Contact</button>
+                <button class="nav-btn" data-view="orders" onclick="showView('orders')">
+                    Orders
+                    <span class="order-badge" id="orderBadge" style="display: none;">0</span>
+                </button>
+                
+                <button class="cart-btn" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+
+                <div class="user-section" id="userSection">
+                    <button class="auth-btn" id="authBtn" onclick="showAuthDialog()">Sign In</button>
+                    <div class="user-dropdown" id="userDropdown" style="display: none;">
+                        <button class="user-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user"></i>
+                            <span id="userName">User</span>
+                        </button>
+                        <div class="user-menu" id="userMenu">
+                            <div class="user-info">
+                                <p class="user-name-text" id="userNameText">User</p>
+                                <p class="user-email" id="userEmail">user@vut.ac.za</p>
+                            </div>
+                            <button class="menu-item" onclick="showView('orders')">
+                                <i class="fas fa-box"></i> My Orders
+                                <span class="order-count" id="orderCount">0</span>
+                            </button>
+                            <button class="menu-item sign-out" onclick="signOut()">
+                                <i class="fas fa-sign-out-alt"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-social">
+                <a href="https://www.facebook.com/p/Vutcampustv-100082672173547/" target="_blank" aria-label="Facebook" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/vutcampustv" target="_blank" aria-label="Instagram" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/vutcampustv" target="_blank" aria-label="Twitter" class="social-link"><i class="fab fa-twitter"></i></a>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars" id="mobileMenuIcon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <button class="mobile-nav-btn" onclick="showView('home'); toggleMobileMenu();">Home</button>
+            <button class="mobile-nav-btn" onclick="showView('about'); toggleMobileMenu();">About</button>
+            <button class="mobile-nav-btn" onclick="showView('contact'); toggleMobileMenu();">Contact</button>
+            <button class="mobile-nav-btn" onclick="showView('orders'); toggleMobileMenu();">Orders</button>
+            <button class="mobile-nav-btn" onclick="toggleCart(); toggleMobileMenu();">
+                <i class="fas fa-shopping-cart"></i> Cart (<span id="mobileCartCount">0</span>)
+            </button>
+            <button class="mobile-auth-btn" id="mobileAuthBtn" onclick="showAuthDialog()">Sign In</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home View -->
+        <div id="homeView" class="view active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="video-background">
+                    <video autoplay muted loop playsinline>
+                        <source src="video/WhatsApp Video 2025-10-27 at 23.37.08_be94596f.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-overlay"></div>
+                </div>
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-bolt"></i>
+                        <span>Fast Campus Delivery</span>
+                    </div>
+                    <h1>Delicious Food Delivered to Your Campus</h1>
+                    <p>Order from VUT Cafeteria & Restaurant with just a few clicks</p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <span>Quick Service</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Campus Wide</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-sparkles"></i>
+                            <span>Fresh Food</span>
+                        </div>
+                    </div>
+                    <button class="hero-btn" onclick="scrollToMenu()">
+                        Order Now
+                        <i class="fas fa-chevron-down bounce"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Popular Items -->
+            <section id="popular-items" class="popular-items">
+                <div class="container">
+                    <div class="section-header">
+                        <div class="section-badge">
+                            <i class="fas fa-sparkles"></i>
+                            <span>Best Sellers</span>
+                        </div>
+                        <h2>Popular Items</h2>
+                        <p>Discover our most loved meals, crafted fresh daily for the VUT community</p>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchBar" class="search-bar" placeholder="Search for meals..." oninput="filterItems()">
+                    </div>
+
+                    <!-- Items Grid -->
+                    <div class="items-grid" id="itemsGrid"></div>
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <p>No items found matching your search.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="how-it-works">
+                <div class="container">
+                    <h2>How It Works</h2>
+                    <p class="subtitle">Four simple steps to satisfy your cravings</p>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                                <div class="step-number">1</div>
+                            </div>
+                            <h3>Browse Menu</h3>
+                            <p>Explore our delicious food options</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <div class="step-number">2</div>
+                            </div>
+                            <h3>Add to Cart</h3>
+                            <p>Select items and customize your order</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-bolt"></i>
+                                <div class="step-number">3</div>
+                            </div>
+                            <h3>Checkout</h3>
+                            <p>Pay securely and track your order</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class="fas fa-sparkles">😊</i>
+                                <div class="step-number">4</div>
+                            </div>
+                            <h3>Enjoy</h3>
+                            <p>Receive your food at your location or collect at the cafeteria</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- About View -->
+        <div id="aboutView" class="view">
+            <section class="content-section">
+                <div class="container content-container">
+                    <h1>About VUTeats</h1>
+                    <div class="content-card">
+                        <p>VUTeats is the premier food ordering platform for Vaal University of Technology students and staff. We connect you with the best food options available on campus, making it easy to satisfy your cravings without the hassle.</p>
+                        <p>Our mission is to provide a seamless, convenient ordering experience that saves you time and ensures you never miss a meal between classes or during study sessions.</p>
+                        <p>Whether you're looking for a quick snack, a hearty meal, or something to share with friends, VUTeats has you covered with a diverse menu of delicious options from the VUT Cafeteria & Restaurant.</p>
+                        <div class="features-box">
+                            <h3><i class="fas fa-sparkles"></i> Why Choose VUTeats?</h3>
+                            <ul>
+                                <li><span class="bullet"></span>Fast and convenient ordering</li>
+                                <li><span class="bullet"></span>Wide variety of menu options</li>
+                                <li><span class="bullet"></span>Campus delivery or pickup</li>
+                                <li><span class="bullet"></span>Secure payment processing</li>
+                                <li><span class="bullet"></span>Student-friendly prices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contact View -->
+        <div id="contactView" class="view">
+            <section class="content-section">
+                <div class="container content-container">
+                    <h1>Contact Us</h1>
+                    <div class="contact-grid">
+                        <div class="content-card">
+                            <h3>Get In Touch</h3>
+                            <div class="contact-info">
+                                <div class="info-item">
+                                    <p class="info-label">Address</p>
+                                    <p class="info-value">Vaal University of Technology</p>
+                                    <p class="info-detail">1091 University Rd, Vanderbijlpark, 1911</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="info-label">Phone</p>
+                                    <p class="info-value"> +27 73 623 5027</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="info-label">Follow Us</p>
+                                    <div class="social-icons">
+                                        <a href="https://www.facebook.com/p/Vutcampustv-100082672173547/" target="_blank" class="social-icon">
+                                            <i class="fab fa-facebook"></i>
+                                        </a>
+                                        <a href="https://www.instagram.com/vutcampustv?igsh=dWw4OHN6anRzMTNw" target="_blank" class="social-icon">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                        <a href="https://x.com/vutcampustv" target="_blank" class="social-icon">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-card">
+                            <h3>Send Us a Message</h3>
+                            <form class="contact-form" onsubmit="sendMessage(event)">
+                                <input type="text" placeholder="Your Name" required>
+                                <input type="email" placeholder="Your Email" required>
+                                <input type="text" placeholder="Subject" required>
+                                <textarea placeholder="Your Message" rows="4" required></textarea>
+                                <button type="submit" class="submit-btn">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Orders View -->
+        <div id="ordersView" class="view">
+            <section class="content-section">
+                <div class="container content-container">
+                    <h1><i class="fas fa-box"></i> My Orders</h1>
+                    <div id="ordersContainer"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-particles" id="footerParticles"></div>
+        <div class="container footer-content">
+            <h3>VUTeats</h3>
+            <p>Vaal University of Technology</p>
+            <p>1091 University Rd, Vanderbijlpark, 1911</p>
+            <p> +27 73 623 5027</p>
+            <p class="copyright">© 2025 VUTeats. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.facebook.com/p/Vutcampustv-100082672173547/" target="_blank">Facebook</a>
+                <span>|</span>
+                <a href="https://www.instagram.com/vutcampustv?igsh=dWw4OHN6anRzMTNw" target="_blank">Instagram</a>
+                <span>|</span>
+                <a href="https://x.com/vutcampustv" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+            <button class="close-btn" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-content" id="cartContent"></div>
+    </div>
+
+    <!-- Auth Dialog -->
+    <div class="dialog-overlay" id="authOverlay" onclick="closeAuthDialog()"></div>
+    <div class="dialog" id="authDialog">
+        <div class="dialog-header">
+            <h3>Welcome to VUTeats</h3>
+            <button class="close-btn" onclick="closeAuthDialog()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="dialog-content">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="signin" onclick="switchTab('signin')">Sign In</button>
+                <button class="tab-btn" data-tab="signup" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+            
+            <div class="tab-content active" id="signinTab">
+                <form onsubmit="signIn(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="student@vut.ac.za" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-submit-btn">Sign In</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="signupTab">
+                <form onsubmit="signUp(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="name" placeholder="John Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="student@vut.ac.za" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" name="phone" placeholder="+27 73 623 5027" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-submit-btn">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Dialog -->
+    <div class="dialog-overlay" id="checkoutOverlay" onclick="closeCheckoutDialog()"></div>
+    <div class="dialog checkout-dialog" id="checkoutDialog">
+        <div class="dialog-header">
+            <h3><i class="fas fa-credit-card"></i> Checkout</h3>
+            <button class="close-btn" onclick="closeCheckoutDialog()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="dialog-content checkout-content">
+            <form onsubmit="placeOrder(event)">
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <h4>Order Summary</h4>
+                    <div id="checkoutItems"></div>
+                    <div class="totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="checkoutSubtotal">R0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Delivery Fee</span>
+                            <span id="checkoutDeliveryFee" class="highlight">FREE</span>
+                        </div>
+                        <div class="total-row grand-total">
+                            <span>Total</span>
+                            <span id="checkoutTotal">R0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Method -->
+                <div class="form-section">
+                    <label class="section-label">
+                        <i class="fas fa-map-marker-alt"></i> Delivery Method
+                    </label>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="deliveryMethod" value="delivery" checked onchange="updateDeliveryFee()">
+                            <div class="radio-content">
+                                <div>
+                                    <p>Campus Delivery</p>
+                                    <small>25-30 minutes</small>
+                                </div>
+                                <span class="price">R15.00</span>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="deliveryMethod" value="pickup" onchange="updateDeliveryFee()">
+                            <div class="radio-content">
+                                <div>
+                                    <p>Pickup at Cafeteria</p>
+                                    <small>10-15 minutes</small>
+                                </div>
+                                <span class="price highlight">FREE</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Delivery Location -->
+                <div class="form-section" id="locationSection">
+                    <label>Delivery Location</label>
+                    <select name="location" id="deliveryLocation" required>
+                        <option value="">Select your location</option>
+                        <option value="library">Library - Main Building</option>
+                        <option value="engineering">Engineering Building</option>
+                        <option value="science">Science Building</option>
+                        <option value="management">Management Building</option>
+                        <option value="residence-a">Residence A</option>
+                        <option value="residence-b">Residence B</option>
+                        <option value="sports">Sports Complex</option>
+                        <option value="parking">Main Parking Area</option>
+                    </select>
+                </div>
+
+                <!-- Special Instructions -->
+                <div class="form-section">
+                    <label>Special Instructions (Optional)</label>
+                    <textarea name="instructions" placeholder="e.g., No onions, extra sauce, meet me at the entrance..." rows="3"></textarea>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="form-section">
+                    <label class="section-label">
+                        <i class="fas fa-wallet"></i> Payment Method
+                    </label>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <div class="radio-content">
+                                <div>
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Credit/Debit Card</span>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="paymentMethod" value="cash">
+                            <div class="radio-content">
+                                <div>
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Cash on Delivery/Pickup</span>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="paymentMethod" value="eft">
+                            <div class="radio-content">
+                                <div>
+                                    <i class="fas fa-university"></i>
+                                    <span>EFT/Bank Transfer</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="checkout-btn">
+                    <span id="checkoutBtnText">Place Order - R0.00</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
